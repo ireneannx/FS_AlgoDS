@@ -45,7 +45,7 @@ class Node:
             # else return self.get(self.right.key) #---> why wont this work? because self.get is calling the get
             # function where you currently are. self.right is calling the get function for self.right
         else:  # go left
-            if self.right is None:
+            if self.left is None:
                 print("not found")
                 return 0
             else:
@@ -61,4 +61,4 @@ root.insert("V", 100)
 root.get("R")
 root.get("S")
 root.get("V")
-# root.get("P")  !!!!!!!!!!! check why this doesnt work yet
+root.get("P")
