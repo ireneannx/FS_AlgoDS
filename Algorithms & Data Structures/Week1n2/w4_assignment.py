@@ -37,6 +37,17 @@ class LinkedList:
             node = node.next
 
         # return result
+
+    def __len__(self):  # returns len of list
+        count = 0
+        node = self.head
+
+        while node is not None:
+            count += 1
+            node = node.next
+
+        return count
+
     def add_to_end(self, node): #starting at the head. add is insert at the end
         if self.head is None:
             self.head = node
@@ -49,16 +60,32 @@ class LinkedList:
     # now current_node is at the last element. current_node still in the function scope
         current_node.next = node
 
+    def insert(self, index, data):  # inserting between 2 nodes, at the position specified by index
+        i = 0
 
+        if self.head is None:
+            print('Linked List is empty. Use Add function instead')
+            return
 
-    # def at(self, index): #if youre at the fiest half start at the head, 2nd half start at tail
-    #     ''''''
-    # def insert(self, index, data): #insert a node
-    #     ''''''
+        for current_node in self:
+
+            if i == index-1:
+                data.next = current_node.next
+                current_node.next = data
+                return
+            i += 1
+
+        # in case index given is larger than length of list
+        print('index given is too large. Length of linked list is shorter than index given')
+
     # def remove(self, index): #remove a node. make sure the elements before n after deleted node are still connected
     #     ''''''
-    # def __len__(self): #len of list
+    # ''''''
+    # def at(self, index): #if youre at the fiest half start at the head, 2nd half start at tail
     #     ''''''
+
+
+
 
 
 llist = LinkedList()
@@ -74,6 +101,10 @@ second.next = third
 print(llist)
 llist.add_to_end(Node('d'))
 print(llist)
+
+llist.insert(4, Node('pls work'))
+print(llist)
+print(len(llist))
 
 # for i in llist: #this wont work without iter func
 #     print(i)

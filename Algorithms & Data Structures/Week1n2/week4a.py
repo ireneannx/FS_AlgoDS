@@ -57,6 +57,8 @@ def sort(array1, array2):
     return sorted_array
 
 
+# ----------- all functions before this is for merge sort
+
 class Student:
     def __init__(self, first_name, last_name):  # dunder func
         self.first_name = first_name
@@ -69,7 +71,7 @@ class Student:
     def __str__(self):  # another dunder obj
         return self.first_name + " " + self.last_name
 
-    def __lt__(self,other):
+    def __lt__(self, other):
         # lt means lesser than, it shows what the sign < means anytime an object in this class is used for comparison
         if self.last_name.upper() == other.last_name.upper():
             'then compare first names'
