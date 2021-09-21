@@ -28,7 +28,7 @@ class LinkedList:
 
         return "->".join(nodes)
 
-    def __iter__(self): #to make object iterable
+    def __iter__(self):  # to make object iterable
         node = self.head
         # result = []
         while node is not None:
@@ -48,16 +48,16 @@ class LinkedList:
 
         return count
 
-    def add_to_end(self, node): #starting at the head. add is insert at the end
+    def add_to_end(self, node):  # starting at the head. add is insert at the end
         if self.head is None:
             self.head = node
             return
 
-      # traverse whole list till you reach the end
+        # traverse whole list till you reach the end
         for current_node in self:
             pass
 
-    # now current_node is at the last element. current_node still in the function scope
+        # now current_node is at the last element. current_node still in the function scope
         current_node.next = node
 
     def insert(self, index, data):  # inserting between 2 nodes, at the position specified by index
@@ -66,10 +66,14 @@ class LinkedList:
         if self.head is None:
             print('Linked List is empty. Use Add function instead')
             return
+        elif index == 0:
+            data.next = self.head
+            self.head = data
+            return
 
         for current_node in self:
 
-            if i == index-1:
+            if i == index - 1:
                 data.next = current_node.next
                 current_node.next = data
                 return
@@ -77,19 +81,40 @@ class LinkedList:
 
         # in case index given is larger than length of list
         print('index given is too large. Length of linked list is shorter than index given')
+        return
 
-    # def remove(self, index): #remove a node. make sure the elements before n after deleted node are still connected
-    #     ''''''
-    # ''''''
-    # def at(self, index): #if youre at the fiest half start at the head, 2nd half start at tail
-    #     ''''''
+    def remove(self, index):  # remove a node. make sure the elements before n after deleted node are still connected
+        i = 0
 
+        if self.head is None:
+            raise Exception("List is empty")
+        elif index == 0:
+            self.head = self.head.next
 
+        for current_node in self:
 
+            if i == index - 1:
+                to_delete = current_node.next
+                next_node = to_delete.next
+                current_node.next = next_node
+                return
 
+            i += 1
+
+    def at(self, index):  # searching
+        i = 0
+
+        if self.head is None:
+            raise Exception("List is empty")
+
+        for current_node in self:
+            if i == index:
+                return current_node
+            i += 1
+
+        raise Exception('index given is too large. Length of linked list is shorter than index given')
 
 llist = LinkedList()
-
 
 first = Node('a')
 second = Node('b')
@@ -102,10 +127,12 @@ print(llist)
 llist.add_to_end(Node('d'))
 print(llist)
 
-llist.insert(4, Node('pls work'))
+llist.insert(0, Node('pls work'))
 print(llist)
 print(len(llist))
+# llist.remove(1)
+# print(llist)
+print(llist.at(7))
 
 # for i in llist: #this wont work without iter func
 #     print(i)
-
