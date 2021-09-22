@@ -105,17 +105,48 @@ class Node:
         return lines, n + m + u, max(p, q) + 2, n + u // 2
 
 
-root = Node("M", 24)
-root.insert("R", 22)
-root.insert("I", 100)
-root.insert("S", 24)
-root.insert("V", 100)
+# testing values ----
+# root = Node("M", 24)
+# root.insert("R", 22)
+# root.insert("I", 100)
+# root.insert("S", 24)
+# root.insert("V", 100)
+#
+# root.get("R")
+# root.get("S")
+# root.get("V")
+# root.get("P")
+#
+# root.display()
 
-root.get("R")
-root.get("S")
-root.get("V")
-root.get("P")
-
-root.display()
 
 # ------------------------------------ UNBALANCED BINARY SEARCH TREE END
+
+# ------------------------------------ CREATING A BALANCED BINARY SEARCH TREE
+class KeyValue:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+
+    def __lt__(self, other):
+        return self.key < other.key
+
+
+# def create_binary_search_tree(list_):
+#     ''''''
+#     return root
+
+
+def sort_list():
+    # use merge sort to sort an unsorted list in the future
+    # for now im just creating a sorted list
+    list = []
+    for i in range(20):
+        name = "Amy" + i
+        val = i
+        list.append(KeyValue(name, val))
+
+    print(list[1])
+
+
+# sort_list()
