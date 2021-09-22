@@ -1,4 +1,5 @@
-# OOP
+# OOP and classes
+#implementing a student Linked List
 
 class Student:
     def __init__(self, first_name, last_name):  # dunder func

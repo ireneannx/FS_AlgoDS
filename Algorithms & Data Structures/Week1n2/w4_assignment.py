@@ -4,16 +4,17 @@
 import random as rd
 from time import perf_counter_ns
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class Node:
     # this is every data point on the linked list
     def __init__(self, data):
         self.data = data
-        self.next = None
+        self.next = None  # where the node points to -> another node
 
     def __str__(self):
-        return str(self.data)
+        return str(self.data)  # for printing node(s) easily
 
 
 class LinkedList:
@@ -59,7 +60,12 @@ class LinkedList:
 
         return count
 
-    def add_to_end(self, node):  # starting at the head. add is insert at the end
+    def add_to_end(self, node):
+        """
+        a function to insert a new node at the end of the linked list
+        :param node: the new node to be inserted (of class Node)
+        :return: None
+        """
         if self.head is None:
             self.head = node
             return
@@ -72,10 +78,21 @@ class LinkedList:
         current_node.next = node
 
     def add_to_beginning(self, node):
+        """
+        a function to add a new node to the beginning of the list
+        :param node: the new node to be inserted (of class Node)
+        :return: None
+        """
         node.next = self.head
         self.head = node
 
     def insert(self, index, data):  # inserting between 2 nodes, at the position specified by index
+        """
+        function inserts a new node (data) at the index specified in the linked list
+        :param index: the index the new node should be at
+        :param data: the node to be inserted (of class Node)
+        :return: None
+        """
         i = 0
 
         if self.head is None:
@@ -100,6 +117,12 @@ class LinkedList:
 
     def remove(self, index):  # remove a node. make sure the elements before n after deleted node are still connected
 
+        """
+        function to remove the node at the imdex specified
+        :param index: index of the node to be removed
+        :return: none
+        """
+
         if self.head is None:
             raise Exception("List is empty")
         elif index == 0:
@@ -111,7 +134,13 @@ class LinkedList:
         previous_node.next = next_node
         return
 
+
     def at(self, index):  # searching
+        """
+        function to search for the data value at the index specified in the linked list
+        :param index: index at which you want to retrieve data
+        :return: the node at the index specified
+        """
         i = 0
 
         if self.head is None:
@@ -125,19 +154,20 @@ class LinkedList:
         raise Exception('index given is too large. Length of linked list is shorter than index given')
 
 
-# llist = LinkedList(['a', 'r', 'q', 'i', 'r', 'e'])
+# TESTING
+# llist1 = LinkedList(['a', 'r', 'q', 'i', 'r', 'e'])
 
-# llist.add_to_end(Node('d'))
+# llist1.add_to_end(Node('d'))
 # print(llist)
 #
-# llist.insert(0, Node('pls work'))
-# print(llist)
-# print(len(llist))
-# llist.remove(0)
-# print(llist)
+# llist1.insert(0, Node('pls work'))
+# print(llist1)
+# print(len(llist1))
+# llist1.remove(0)
+# print(llist1)
 
 
-# print(llist.at(3))
+# print(llist1.at(3))
 
 # for i in llist: #this wont work without iter func
 #     print(i)
@@ -156,8 +186,30 @@ def list_generation(number_entries: int):
     return array
 
 
+def plot_creator(df: pd.DataFrame):
+    """
+    Creates plot out of the DataFrame with array length on x-axis and duration in seconds on y axis
+    :param df: DataFrame containing array length and duration of respective insertion sort
+    :return: none
+    """
+    # Define the plot
+    plt.style.use("bmh")
+    fig, ax = plt.subplots()
+    ax.plot(df["sizes"], df["time_average"], label="adding to linked list", marker="o", linestyle="-")
+
+    # Prepare the labels and title
+    ax.legend(loc="upper left")
+    ax.set_xlabel("Linked list length")
+    ax.set_ylabel("Duration in nanoseconds")
+    ax.set_title("Time complexity of adding a new element in a linked list")
+
+    # Create plot and save it
+    plt.show()
+    # fig.savefig("assignment1_insertion_sort_time_complexity/figure_assigment_1")
+
+
 def main():
-    sizes = [1000, 2000, 4000, 8000, 16000, 32000]
+    sizes = [1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000]
     time_array = []
     df = pd.DataFrame(columns=['sizes', 'time_average'])
 
@@ -173,7 +225,7 @@ def main():
         end_time = perf_counter_ns()
 
         time_taken = end_time - start_time
-        print(time_taken)
+
         time_array.append(time_taken)
 
     #    add values to df
@@ -185,5 +237,12 @@ def main():
 
     print(df)
 
+    #   plot
+    plot_creator(df)
+
 
 main()
+
+# comments
+# why is the time complexity not 0(n)
+# need to implement time complexity for searching --> at func
