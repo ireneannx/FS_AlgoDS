@@ -1,6 +1,10 @@
 # google style guide for python PEP8 and PEP20
 # Object oriented programing
 # create a linked list
+import random as rd
+from time import perf_counter_ns
+import pandas as pd
+
 
 class Node:
     # this is every data point on the linked list
@@ -13,10 +17,17 @@ class Node:
 
 
 class LinkedList:
-    def __init__(self):
+    def __init__(self, nodes=None):
         # we need to know where the list starts
         self.head = None
-        ...
+
+        # to create a linked list easily
+        if nodes is not None:
+            node = Node(data=nodes.pop(0))
+            self.head = node
+            for elem in nodes:  # index 0 already popped so elem starts from next index
+                node.next = Node(data=elem)
+                node = node.next
 
     def __str__(self):  # to loop thru n show some kinda separator so u can see output easily
         node = self.head
@@ -60,6 +71,10 @@ class LinkedList:
         # now current_node is at the last element. current_node still in the function scope
         current_node.next = node
 
+    def add_to_beginning(self, node):
+        node.next = self.head
+        self.head = node
+
     def insert(self, index, data):  # inserting between 2 nodes, at the position specified by index
         i = 0
 
@@ -84,22 +99,17 @@ class LinkedList:
         return
 
     def remove(self, index):  # remove a node. make sure the elements before n after deleted node are still connected
-        i = 0
 
         if self.head is None:
             raise Exception("List is empty")
         elif index == 0:
             self.head = self.head.next
+            return
 
-        for current_node in self:
-
-            if i == index - 1:
-                to_delete = current_node.next
-                next_node = to_delete.next
-                current_node.next = next_node
-                return
-
-            i += 1
+        previous_node = self.at(index - 1)
+        next_node = self.at(index + 1)
+        previous_node.next = next_node
+        return
 
     def at(self, index):  # searching
         i = 0
@@ -114,25 +124,66 @@ class LinkedList:
 
         raise Exception('index given is too large. Length of linked list is shorter than index given')
 
-llist = LinkedList()
 
-first = Node('a')
-second = Node('b')
-third = Node('c')
-llist.head = first
-first.next = second
-second.next = third
+# llist = LinkedList(['a', 'r', 'q', 'i', 'r', 'e'])
 
-print(llist)
-llist.add_to_end(Node('d'))
-print(llist)
-
-llist.insert(0, Node('pls work'))
-print(llist)
-print(len(llist))
-# llist.remove(1)
+# llist.add_to_end(Node('d'))
 # print(llist)
-print(llist.at(7))
+#
+# llist.insert(0, Node('pls work'))
+# print(llist)
+# print(len(llist))
+# llist.remove(0)
+# print(llist)
+
+
+# print(llist.at(3))
 
 # for i in llist: #this wont work without iter func
 #     print(i)
+
+# creating a linked list of 1000 elements
+def list_generation(number_entries: int):
+    """
+        Generates a randomly ordered list of a certain length
+        :param number_entries: The length of the list
+        :return: randomly ordered list
+    """
+    # Create an randomly ordered list
+    array = list(range(number_entries))
+    # Randomly shuffle the list
+    rd.shuffle(array)
+    return array
+
+
+def main():
+    sizes = [1000, 2000, 4000, 8000, 16000, 32000]
+    time_array = []
+    df = pd.DataFrame(columns=['sizes', 'time_average'])
+
+    for i in range(len(sizes)):
+        # Generate list and sort
+        random_list = list_generation(sizes[i])
+
+        llist = LinkedList(random_list)
+
+        # calculating time for adding to a list
+        start_time = perf_counter_ns()
+        llist.add_to_beginning(Node('start'))
+        end_time = perf_counter_ns()
+
+        time_taken = end_time - start_time
+        print(time_taken)
+        time_array.append(time_taken)
+
+    #    add values to df
+    i = 0
+    for size in sizes:
+        df.loc[i, 'sizes'] = size
+        df.loc[i, 'time_average'] = time_array[i]
+        i += 1
+
+    print(df)
+
+
+main()
