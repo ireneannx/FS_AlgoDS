@@ -1,7 +1,4 @@
-# making a binary search tree class
-
-# -------------------------------------------------------------------------------------------
-# UNBALANCED BINARY SEARCH TREE
+# ------------------------------------ CREATING A BALANCED BINARY SEARCH TREE
 class Node:
     def __init__(self, key, data):
         self.key = key
@@ -105,19 +102,77 @@ class Node:
         return lines, n + m + u, max(p, q) + 2, n + u // 2
 
 
-# testing values ----
-root = Node("M", 24)
-root.insert("R", 22)
-root.insert("I", 100)
-root.insert("S", 24)
-root.insert("V", 100)
+class KeyValue:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
 
-root.get("R")
-root.get("S")
-root.get("V")
-root.get("P")
+    def __lt__(self, other):
+        return self.key < other.key
+
+    def __str__(self):
+        s = f"{self.key} : {self.value} \n"
+        return s
+
+
+def sort_list(num):
+    # use merge sort to sort an unsorted list in the future
+    # for now im just creating a sorted list
+    list = []
+    for i in range(num):
+        val = "Amy" + str(i)
+        key = i
+        list.append(KeyValue(key, val))
+
+    return list
+
+
+list = sort_list(10)
+
+nodes = []
+
+
+def node_list(list):
+    sorted_list = list
+    length = len(sorted_list)
+    mid_index = length // 2
+    mid_key = list[mid_index].key
+
+    nodes.append(mid_key)
+
+    left = sorted_list[:mid_index]
+    right = sorted_list[mid_index + 1:]
+    if len(left) > 1:
+        node_list(left)
+    else:
+        nodes.append(left[0].key)
+
+    if len(right) > 1:
+        node_list(right)
+    elif len(right) == 1:
+        nodes.append(right[0].key)
+
+    return nodes
+
+
+def create_balanced_binary_search_tree(list):
+    # sorted_list = merge_sort(list_)
+    sorted_list = list
+    nodes = node_list(sorted_list)
+
+    # generate balanced binary search tree
+    i = 0
+    for node_index in nodes:
+        if i == 0:
+            root = Node(sorted_list[node_index].key, sorted_list[node_index].value)
+        else:
+            root.insert(sorted_list[node_index].key, sorted_list[node_index].value)
+
+        i += 1
+
+    return root
+
+
+root = create_balanced_binary_search_tree(list)
 
 root.display()
-
-
-# ------------------------------------ UNBALANCED BINARY SEARCH TREE END
