@@ -7,8 +7,8 @@ import pandas as pd
 __author__ = "Irene"
 __email__ = "irene.iype@fs-students.de," \
  \
- \
-# the merge sort functions
+    # the merge sort functions
+
 
 def divide_merge(array):
     """
@@ -58,8 +58,27 @@ def sort(array1, array2):
     return sorted_array
 
 
-# merge sort function end
+# merge sort function end----------
 
+def list_generation(number_entries):
+    """
+        Generates a randomly ordered list of a certain length of key value pairs
+        :param number_entries: The length of the list
+        :return: randomly ordered list
+        """
+    list = []
+    for i in range(number_entries):
+        val = "Irene" + str(i)
+        key = i
+        list.append(KeyValue(key, val))
+
+    rd.shuffle(list)
+
+    return list
+
+
+# --------------
+# every node in the BST is of class Node
 class Node:
     def __init__(self, key, data):
         self.key = key
@@ -92,7 +111,7 @@ class Node:
 
     def get(self, key):
         if self.key == key:
-            print(self.data)
+            # print(self.data)
             return self.data
         elif key > self.key:  # go right
             # check if right is none!!!!
@@ -165,7 +184,7 @@ class Node:
 
 class KeyValue:
 
-    # each element in the list is a KeyValue class
+    # each element/node to be inserted into the BST is a KeyValue class
 
     def __init__(self, key, value):
         self.key = key
@@ -179,26 +198,10 @@ class KeyValue:
         return s
 
 
-def list_generation(number_entries):
-    """
-        Generates a randomly ordered list of a certain length of key value pairs
-        :param number_entries: The length of the list
-        :return: randomly ordered list
-        """
-    list = []
-    for i in range(number_entries):
-        val = "Amy" + str(i)
-        key = i
-        list.append(KeyValue(key, val))
-
-    rd.shuffle(list)
-
-    return list
-
-
 nodes = []  # used in node_list
 
 
+# creating a binary search tree
 def node_list(list):
     """
     function that returns a list of nodes in the order they should be inserted into the binary search tree in order
@@ -254,7 +257,36 @@ def create_balanced_binary_search_tree(list):
     return root
 
 
-random_list = list_generation(100)
-root = create_balanced_binary_search_tree(random_list)
+# creating a binary search tree end----------
 
-root.display()
+if __name__ == '__main__':
+    # random_list = list_generation(100)
+    # root = create_balanced_binary_search_tree(random_list)
+
+    # root.display()
+    # root.get(32)
+
+    # create trees of increasing sizes and try to retrieve values measuring the time.
+    tree_sizes = [1000, 2000, 4000, 8000, 16000, 32000]
+    time_array = []
+    for size in tree_sizes:
+        new_list = list_generation(size)
+        root = create_balanced_binary_search_tree(new_list)
+
+        # choosing an arbitary key to return value from the root
+        rand_key = rd.randint(0, size - 1)
+
+        times = []
+        for j in range(size):
+            time_start = perf_counter_ns()
+            x = root.get(rd.randint(0, size - 1))
+            time_end = perf_counter_ns()
+            time = time_end - time_start
+            times.append(time)
+
+        avg_time = int(sum(times) / len(times))
+        time_array.append(avg_time)
+
+#     display values
+    for i in range(len(tree_sizes)):
+        print(f'Tree Size: {tree_sizes[i]} || Average Search Time: {time_array[i]}')
