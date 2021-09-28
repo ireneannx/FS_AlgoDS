@@ -151,7 +151,7 @@ class LinkedList:
                 return current_node
             i += 1
 
-        raise Exception('index given is too large. Length of linked list is shorter than index given')
+        raise Exception('index given is out of range. Length of linked list is shorter than index given')
 
 
 # TESTING
