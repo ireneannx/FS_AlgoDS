@@ -1,4 +1,65 @@
 # ------------------------------------ CREATING A BALANCED BINARY SEARCH TREE
+import random as rd
+from time import perf_counter_ns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+__author__ = "Irene"
+__email__ = "irene.iype@fs-students.de," \
+ \
+ \
+# the merge sort functions
+
+def divide_merge(array):
+    """
+    Splits arrays into lists of size 1 recursively. Then sorts from the lowest level up through the sort() function.
+    :param array: unsorted array
+    :return: a sorted array (through sort function)
+    """
+
+    if len(array) <= 1:
+        return array
+
+    # divide array into 2 lists
+    split_point = len(array) // 2
+    list_1 = array[:split_point]
+    list_2 = array[split_point:]
+
+    # split recursively until len(arrray) = 1. Then sends to sort function
+    sorted_list_1 = divide_merge(list_1)
+    sorted_list_2 = divide_merge(list_2)
+
+    return sort(sorted_list_1, sorted_list_2)
+
+
+def sort(array1, array2):
+    """
+    Sorts two sorted arrays
+    :param array1: the first sorted array
+    :param array2: the second sorted array
+    :return: a new sorted array
+    """
+
+    sorted_array = []
+
+    while 0 < len(array1) and 0 < len(array2):
+        # comparing first element. The smaller of the two elements appended to sorted_array until one array is empty
+        if array1[0] > array2[0]:
+            sorted_array.append(array2.pop(0))
+        else:
+            sorted_array.append(array1.pop(0))
+
+    # the non-empty array from the previous step gets added to sorted_array
+    if 0 < len(array1):
+        sorted_array.extend(array1)
+    elif 0 < len(array2):
+        sorted_array.extend(array2)
+
+    return sorted_array
+
+
+# merge sort function end
+
 class Node:
     def __init__(self, key, data):
         self.key = key
@@ -103,6 +164,9 @@ class Node:
 
 
 class KeyValue:
+
+    # each element in the list is a KeyValue class
+
     def __init__(self, key, value):
         self.key = key
         self.value = value
@@ -115,24 +179,33 @@ class KeyValue:
         return s
 
 
-def sort_list(num):
-    # use merge sort to sort an unsorted list in the future
-    # for now im just creating a sorted list
+def list_generation(number_entries):
+    """
+        Generates a randomly ordered list of a certain length of key value pairs
+        :param number_entries: The length of the list
+        :return: randomly ordered list
+        """
     list = []
-    for i in range(num):
+    for i in range(number_entries):
         val = "Amy" + str(i)
         key = i
         list.append(KeyValue(key, val))
 
+    rd.shuffle(list)
+
     return list
 
 
-list = sort_list(10)
-
-nodes = []
+nodes = []  # used in node_list
 
 
 def node_list(list):
+    """
+    function that returns a list of nodes in the order they should be inserted into the binary search tree in order
+    to create a balanced tree
+    :param list: sorted list of keyvalue pairs that need to be inserted into the binary search tree
+    :return: nodes
+    """
     sorted_list = list
     length = len(sorted_list)
     mid_index = length // 2
@@ -156,8 +229,16 @@ def node_list(list):
 
 
 def create_balanced_binary_search_tree(list):
-    # sorted_list = merge_sort(list_)
-    sorted_list = list
+    """
+    function to create balanced binary search tree
+    :param list: random list of keyvalue pairs to be create the tree
+    :return: root node of balanced binary search tree
+    """
+    # sort the list using merge sort
+    sorted_list = divide_merge(list)
+
+    # find the order in which the nodes in the list needs to be inserted into the binary search tree in order to make
+    # it balanced
     nodes = node_list(sorted_list)
 
     # generate balanced binary search tree
@@ -173,6 +254,7 @@ def create_balanced_binary_search_tree(list):
     return root
 
 
-root = create_balanced_binary_search_tree(list)
+random_list = list_generation(100)
+root = create_balanced_binary_search_tree(random_list)
 
 root.display()
