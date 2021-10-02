@@ -7,8 +7,7 @@ import pandas as pd
 __author__ = "Irene"
 __email__ = "irene.iype@fs-students.de," \
  \
-
-# the merge sort functions
+    # the merge sort functions
 def divide_merge(array):
     """
     Splits arrays into lists of size 1 recursively. Then sorts from the lowest level up through the sort() function.
@@ -267,13 +266,13 @@ def plot_creator(df: pd.DataFrame):
     # Define the plot
     plt.style.use("bmh")
     fig, ax = plt.subplots()
-    ax.plot(df["size"], df["average_time"], label="getting element from unbalanced BST", marker="o", linestyle="-")
+    ax.plot(df["size"], df["average_time(ns)"], label="getting element from unbalanced BST", marker="o", linestyle="-")
 
     # Prepare the labels and title
     # ax.legend(loc="upper left")
     ax.set_xlabel("list length of key value pairs")
     ax.set_ylabel("Duration in nanoseconds")
-    ax.set_title("Time complexity of getting an arbitary element in unbalanced BST")
+    ax.set_title("Time complexity of getting an arbitary element in balanced BST")
 
     # Create plot and save it
     plt.show()
@@ -281,18 +280,21 @@ def plot_creator(df: pd.DataFrame):
 
 if __name__ == '__main__':
 
-    df = pd.DataFrame(columns=['size', 'average_time'])
+    df = pd.DataFrame(columns=['size', 'average_time(ns)'])
 
     # create trees of increasing sizes and try to retrieve values measuring the time.
-    tree_sizes = [2000, 4000, 8000, 16000, 32000, 50000, 64000, 75000, 100000, 150000]
+    tree_sizes = [2000, 4000, 8000, 16000, 32000, 50000, 64000, 75000, 100000, 150000, 200000, 225000]
     for i in range(len(tree_sizes)):
         new_list = list_generation(tree_sizes[i])
         root = create_balanced_binary_search_tree(new_list)
 
+        # root.display()
+
         times = []
         for j in range(tree_sizes[i]):
             time_start = perf_counter_ns()
-            x = root.get(rd.randint(0, tree_sizes[i] - 1)) # choosing an arbitary key to return value from the root
+            # x = root.get(rd.randint(0, tree_sizes[i] - 1)) # choosing an arbitary key to return value from the root
+            x = root.get(j)
             time_end = perf_counter_ns()
             time = time_end - time_start
             times.append(time)
@@ -305,3 +307,4 @@ if __name__ == '__main__':
     # display values
     print(df)
     plot_creator(df)
+    print('complete')
