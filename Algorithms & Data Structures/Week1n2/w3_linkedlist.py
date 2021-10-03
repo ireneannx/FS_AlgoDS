@@ -10,15 +10,38 @@ import matplotlib.pyplot as plt
 class Node:
     # this is every data point on the linked list
     def __init__(self, data):
-        self.data = data
-        self.next = None  # where the node points to -> another node
+        self._data = data
+        self._next = None  # where the node points to -> another node
 
     def __str__(self):
         return str(self.data)  # for printing node(s) easily
 
+    @property
+    # getter func
+    def data(self):
+        print('in getter')
+        return self._data
+
+    @data.setter
+    def data(self, new):
+        self._data = new
+
+    @property
+    # getter func
+    def next(self):
+        return self._next
+
+    @next.setter
+    def next(self, new_nxt):
+
+        if isinstance(new_nxt, Node) or new_nxt is None:
+            self._next = new_nxt
+        else:
+            raise TypeError
+
 
 class LinkedList:
-    def __init__(self, nodes=None):
+    def __init__(self, nodes=None) -> object:
         # we need to know where the list starts
         self.head = None
 
@@ -32,13 +55,14 @@ class LinkedList:
 
     def __str__(self):  # to loop thru n show some kinda separator so u can see output easily
         node = self.head
-        nodes = []
-        while node is not None:
-            nodes.append(node.data)
+        connector = ' '
+        for i in range(len(self)):
+            if i > 0:
+                connector += '->'
+            connector += f'{node.data}'
             node = node.next
-        nodes.append("None")
 
-        return "->".join(nodes)
+        return connector
 
     def __iter__(self):  # to make object iterable
         node = self.head
@@ -60,12 +84,14 @@ class LinkedList:
 
         return count
 
-    def add_to_end(self, node):
+    def add_to_end(self, data):
         """
         a function to insert a new node at the end of the linked list
-        :param node: the new node to be inserted (of class Node)
+        :param data: the new data to be inserted
         :return: None
         """
+        node = Node(data)
+
         if self.head is None:
             self.head = node
             return
@@ -77,39 +103,44 @@ class LinkedList:
         # now current_node is at the last element. current_node still in the function scope
         current_node.next = node
 
-    def add_to_beginning(self, node):
+    def add_to_beginning(self, data):
         """
         a function to add a new node to the beginning of the list
-        :param node: the new node to be inserted (of class Node)
+        :param data: the new data to be inserted
         :return: None
         """
+        node = Node(data)
         node.next = self.head
         self.head = node
+
+        return
 
     def insert(self, index, data):  # inserting between 2 nodes, at the position specified by index
         """
         function inserts a new node (data) at the index specified in the linked list
         :param index: the index the new node should be at
-        :param data: the node to be inserted (of class Node)
+        :param data: the data to be inserted
         :return: None
         """
         i = 0
 
+        node = Node(data)
+
         if self.head is None:
-            print('Linked List is empty. Use Add function instead')
+            self.add_to_beginning(self, data)
             return
         elif index == 0:
-            data.next = self.head
-            self.head = data
+            node.next = self.head
+            self.head = node
             return
+        else:
+            previous_node = self.at(index)
+            next_node = previous_node.next
 
-        for current_node in self:
-
-            if i == index - 1:
-                data.next = current_node.next
-                current_node.next = data
-                return
-            i += 1
+            #     switch links
+            previous_node.next = node
+            node.next = next_node
+            return
 
         # in case index given is larger than length of list
         print('index given is too large. Length of linked list is shorter than index given')
@@ -127,13 +158,12 @@ class LinkedList:
             raise Exception("List is empty")
         elif index == 0:
             self.head = self.head.next
-            return
+        else:
+            previous_node = self.at(index - 1)
+            next_node = self.at(index + 1)
+            previous_node.next = next_node
 
-        previous_node = self.at(index - 1)
-        next_node = self.at(index + 1)
-        previous_node.next = next_node
         return
-
 
     def at(self, index):  # searching
         """
@@ -153,24 +183,6 @@ class LinkedList:
 
         raise Exception('index given is out of range. Length of linked list is shorter than index given')
 
-
-# TESTING
-# llist1 = LinkedList(['a', 'r', 'q', 'i', 'r', 'e'])
-
-# llist1.add_to_end(Node('d'))
-# print(llist)
-#
-# llist1.insert(0, Node('pls work'))
-# print(llist1)
-# print(len(llist1))
-# llist1.remove(0)
-# print(llist1)
-
-
-# print(llist1.at(3))
-
-# for i in llist: #this wont work without iter func
-#     print(i)
 
 # creating a linked list of 1000 elements
 def list_generation(number_entries: int):
@@ -220,8 +232,9 @@ def main():
         llist = LinkedList(random_list)
 
         # calculating time for adding to a list
+        thing = 'start'
         start_time = perf_counter_ns()
-        llist.add_to_beginning(Node('start'))
+        llist.add_to_beginning(thing)
         end_time = perf_counter_ns()
 
         time_taken = end_time - start_time
