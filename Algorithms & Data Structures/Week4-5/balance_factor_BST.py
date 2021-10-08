@@ -1,5 +1,4 @@
 # ------------------------------------ CREATING A BALANCED BINARY SEARCH TREE 
-# seeing if this works
 import random as rd
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
@@ -8,9 +7,8 @@ import pandas as pd
 __author__ = "Irene"
 __email__ = "irene.iype@fs-students.de," \
  \
+
     # the merge sort functions
-
-
 def divide_merge(array):
     """
     Splits arrays into lists of size 1 recursively. Then sorts from the lowest level up through the sort() function.
@@ -61,34 +59,6 @@ def sort(array1, array2):
 
 # merge sort function end----------
 
-def list_generation(number_entries):
-    """
-        Generates a randomly ordered list of a certain length of key value pairs
-        :param number_entries: The length of the list
-        :return: randomly ordered list
-        """
-    list = []
-    for i in range(number_entries):
-        val = "Irene" + str(i)
-        key = i
-        list.append(KeyValue(key, val))
-
-    rd.shuffle(list)
-
-    return list
-
-
-# --------------
-
-# ----------- calculating balance factor
-def height(current_node):
-    if current_node is None:
-        return 0
-
-    height_ = 1 + max(height(current_node.left), height(current_node.right))
-    return height_
-
-
 # every node in the BST is of class Node
 class Node:
     def __init__(self, key, data):
@@ -96,8 +66,57 @@ class Node:
         self.data = data
         self.left = None
         self.right = None
-        self.balance_factor = 0
-        self.height = 0
+        self.balance_factor = None
+
+    def __str__(self):
+        s = f"Key: {self.key} , Value: {self.data} \n"
+        return s
+
+    # functions for calculating balance factor -------------
+
+    def get_height(self):
+        """
+        returns height of current node. For one-None tree, height is 1.
+        """
+        if self.left is None:
+            left_height = 0
+        else:
+            left_height = self.left.get_height()
+
+        if self.right is None:
+            right_height = 0
+        else:
+            right_height = self.right.get_height()
+
+        
+        if self.right is None and self.left is None: 
+            return 1
+        else:
+           height = 1 + max(left_height, right_height)
+           return height
+
+    def get_balance_factor(self):
+
+        """
+        calculates the balance factor of self/node and assigns it to self.balance factor
+        returns the balance factor
+        """
+
+        if self.left is None:
+            left_height = 0
+        else:
+            left_height = self.left.get_height()
+
+        if self.right is None:
+            right_height = 0
+        else:
+            right_height = self.right.get_height()
+
+        self.balance_factor = right_height - left_height
+
+        return self.balance_factor
+    
+    # -----------------
 
     def insert(self, key, data):
 
@@ -151,9 +170,13 @@ class Node:
 
     def _display_aux(self):
         """Returns list of strings, width, height, and horizontal coordinate of the root."""
+
+        # getting balance factor so we can add it to the tree later
+        self.get_balance_factor()
+
         # No child.
         if self.right is None and self.left is None:
-            line = '%s' % self.key
+            line = '%s (%s)' % (self.key, self.balance_factor)
             width = len(line)
             height = 1
             middle = width // 2
@@ -162,7 +185,7 @@ class Node:
         # Only left child.
         if self.right is None:
             lines, n, p, x = self.left._display_aux()
-            s = '%s' % self.key
+            s = '%s (%s)' % (self.key, self.balance_factor)
             u = len(s)
             first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
             second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
@@ -172,7 +195,7 @@ class Node:
         # Only right child.
         if self.left is None:
             lines, n, p, x = self.right._display_aux()
-            s = '%s' % self.key
+            s = '%s (%s)' % (self.key, self.balance_factor)
             u = len(s)
             first_line = s + x * '_' + (n - x) * ' '
             second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
@@ -182,7 +205,7 @@ class Node:
         # Two children.
         left, n, p, x = self.left._display_aux()
         right, m, q, y = self.right._display_aux()
-        s = '%s' % self.key
+        s = '%s (%s)' % (self.key, self.balance_factor)
         u = len(s)
         first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
         second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
@@ -214,7 +237,7 @@ class KeyValue:
 nodes = []  # used in node_list
 
 
-# creating a binary search tree
+# creating a balanced binary search tree
 def node_list(list):
     """
     function that returns a list of nodes in the order they should be inserted into the binary search tree in order
@@ -243,22 +266,6 @@ def node_list(list):
     return nodes
 
 
-# def create_bst_as_in_class(list_):
-#
-#     sorted_list = list_
-#     length = len(sorted_list)
-#     mid_index = length // 2
-#     mid_key = sorted_list[mid_index].key
-#     mid_data = sorted_list[mid_index].value
-#
-#     # nodes.append(mid_key)
-#     boot = Node(sorted_list[mid_index].key, sorted_list[mid_index].value)
-#     boot.left = create_bst_as_in_class(sorted_list[:mid_index])
-#     boot.right = create_bst_as_in_class(sorted_list[mid_index + 1:])
-#
-#     return boot
-
-
 def create_balanced_binary_search_tree(list) -> object:
     """
     function to create balanced binary search tree
@@ -284,66 +291,18 @@ def create_balanced_binary_search_tree(list) -> object:
     return root
 
 
-# creating a binary search tree end----------
-
-def plot_creator(df: pd.DataFrame):
-    """
-    Creates plot out of the DataFrame with list size on x-axis and avg duration in seconds to retrieve value on y axis
-    :param df: DataFrame containing list length and duration of searching in BST
-    :return: none
-    """
-    # Define the plot
-    plt.style.use("bmh")
-    fig, ax = plt.subplots()
-    ax.plot(df["size"], df["average_time(ns)"], label="getting element from unbalanced BST", marker="o", linestyle="-")
-
-    # Prepare the labels and title
-    # ax.legend(loc="upper left")
-    ax.set_xlabel("list length of key value pairs")
-    ax.set_ylabel("Duration in nanoseconds")
-    ax.set_title("Time complexity of getting an arbitary element in balanced BST")
-
-    # Create plot and save it
-    plt.show()
+# creating a balanced binary search tree end----------
 
 
 if __name__ == '__main__':
-    # df = pd.DataFrame(columns=['size', 'average_time(ns)'])
-    #
-    # # create trees of increasing sizes and try to retrieve values measuring the time.
-    # tree_sizes = [2000, 4000, 8000, 16000, 32000, 50000, 64000, 75000, 100000, 150000, 200000, 225000]
-    # for i in range(len(tree_sizes)):
-    #     new_list = list_generation(tree_sizes[i])
-    #     root = create_balanced_binary_search_tree(new_list)
-    #
-    #     # root.display()
-    #
-    #     times = []
-    #     for j in range(tree_sizes[i]):
-    #         time_start = perf_counter_ns()
-    #         x = root.get(j)
-    #         time_end = perf_counter_ns()
-    #         time = time_end - time_start
-    #         times.append(time)
-    #
-    #     avg_time = int(sum(times) / len(times))
-    #     print(f'done {tree_sizes[i]}')
-    #
-    #     df.loc[i] = [tree_sizes[i]] + [avg_time]
-    #
-    # # display values
-    # print(df)
-    # plot_creator(df)
-    # print('complete')
-
-    boo = create_balanced_binary_search_tree(
+    
+    root = create_balanced_binary_search_tree(
         [KeyValue(13, 13), KeyValue(15, 15), KeyValue(16, 16), KeyValue(10, 10), KeyValue(11, 11), KeyValue(6, 6),
          KeyValue(5, 5), KeyValue(4, 4)])
-    # boo = Node(11,11)
-    boo.insert(3,3)
-    # boo.insert(5,5)
-    # boo.insert(4,4)
-    # boo.insert(10,10)
-    boo.display()
-    x = height(boo.right)
-    print(x)
+    
+    root.insert(3,3) #to make it unbalanced 
+    
+    # display root with balance factor for each node
+    root.display()
+
+
