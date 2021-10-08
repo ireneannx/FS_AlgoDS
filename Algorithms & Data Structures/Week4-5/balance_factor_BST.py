@@ -115,6 +115,27 @@ class Node:
         self.balance_factor = right_height - left_height
 
         return self.balance_factor
+
+    def fill_balance_factor(self):
+        self.get_balance_factor()
+
+        # no child
+        if self.right is None and self.left is None:
+            return 0 
+        # Only left child
+        elif self.right is None:
+            self.left.fill_balance_factor()
+
+        # only right child
+        elif self.left is None:
+            self.right.fill_balance_factor()
+
+        # both children 
+        else:
+            self.right.fill_balance_factor()
+            self.left.fill_balance_factor()
+
+
     
     # -----------------
 
@@ -301,8 +322,10 @@ if __name__ == '__main__':
          KeyValue(5, 5), KeyValue(4, 4)])
     
     root.insert(3,3) #to make it unbalanced 
+
+    # root.fill_balance_factor()
     
-    # display root with balance factor for each node
+    # display root with balance factor calledfor each node
     root.display()
 
 
