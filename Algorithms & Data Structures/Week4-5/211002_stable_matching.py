@@ -1,5 +1,3 @@
-import pandas as pd
-
 def return_index(list_, person):
     for i in range(len(list_)):
         if list_[i] == person:
@@ -50,9 +48,8 @@ class Person:
             preferences = girl.preference
             current_guy_index = return_index(preferences, current_guy)
             potential_guy_index = return_index(preferences, self)
-            print(current_guy_index, potential_guy_index)
+    
             
-
             if potential_guy_index > current_guy_index:
                 print(f'sorry, {self} has been rejected by {girl}')
             #     remove girl from guys list
@@ -77,98 +74,53 @@ class Person:
 # acceptors A,B,C
 
 # proposers initialisation
-a = Person('a')
-b = Person('b')
-c = Person('c')
+Adam = Person('Adam')
+Bill = Person('Bill')
+Carl = Person('Carl')
+Dan = Person('Dan')
+Eric = Person('Eric')
 
 # acceptors initialisatiom
-A = Person('A')
-B = Person('B')
-C = Person('C')
-
-# proposers pref
-prefa = [A, B, C]
-
-prefb = [B, A, C]
-
-prefc = [A, C, B]
-
-# acceptors pref
-prefB = [a, b, c]
-
-prefC = [b, a, c]
-
-prefA = [c, b, a]
-
-# set preferences for proposers
-a.set_preference(prefa)
-b.set_preference(prefb)
-c.set_preference(prefc)
+Amy = Person('Amy')
+Beth = Person('Beth')
+Cara = Person('Cara')
+Diane = Person('Diane')
+Ellen = Person('Ellen')
 
 # set preferences for acceptors
-A.set_preference(prefA)
-B.set_preference(prefB)
-C.set_preference(prefA)
+Amy.set_preference([Eric, Adam, Bill, Dan, Carl])
+Beth.set_preference([Carl, Bill, Dan, Adam, Eric])
+Cara.set_preference([Bill, Carl, Dan, Eric, Adam])
+Diane.set_preference([Adam, Eric, Dan, Carl, Bill])
+Ellen.set_preference([Dan, Bill, Eric, Carl, Adam])
 
-# def choose(girl, potential_guy):
-#     if girl.partner is None:
-#         girl.partner = potential_guy
-#         potential_guy.partner = girl
-#     else:
-#         current_guy = girl.partner
-#         # loop through girls preference list to see which guy is better
-#         preferences = girl.preference
-#         current_guy_index = return_index(preferences, current_guy)
-#         potential_guy_index = return_index(preferences, potential_guy)
-#         print(current_guy_index, potential_guy_index)
+# set preferences for proposers
+Adam.set_preference([Beth, Amy, Diane, Ellen, Cara])
+Bill.set_preference([Diane, Beth, Amy, Cara, Ellen])
+Carl.set_preference([Beth, Ellen, Cara, Diane, Amy])
+Dan.set_preference([Amy, Diane, Cara, Beth, Ellen])
+Eric.set_preference([Beth, Diane, Amy, Ellen, Cara])
+
+proposers = [Adam, Bill, Carl, Dan, Eric]
+acceptors = [Amy, Beth, Cara, Diane, Ellen]
+
+choices = len(proposers) #num of preferences for everyone = len(proposers)
+
+def gale_shapely(proposers):
+
+    while True: #for each choice 
+        exit = 0 
+        for i in range(len(proposers)): #go through each proposer
+            if(proposers[i].partner is None):
+                proposers[i].make_proposal()
+                exit += 1 
         
+        #exit early if all engaged 
+        if exit == 0:
+            break
 
-#         if potential_guy_index > current_guy_index:
-#             print(f'sorry, {potential_guy} has been rejected by {girl}')
-#         #     remove girl from guys list
-#             girl_index = return_index(potential_guy.preference, girl)
-#             potential_guy.preference[girl_index] = None
-#         else:
-#             print(f'congratulations! {potential_guy} has been accepted by {girl}')
-#             # remove girl from prev guys list 
-#             girl_index = return_index(current_guy.preference, girl)
-#             print(f'ex index = {girl_index}')
-#             current_guy.preference[girl_index] = None
-#             current_guy.partner = None 
+    # print matches
+    for proposer in proposers:
+        print (f'({proposer}, {proposer.partner})')
 
-#             # set girl up with new guy 
-#             potential_guy.partner = girl
-#             girl.partner = potential_guy
-
-
-#     return 0
-
-
-
-# def make_proposal(person):
-#     preferences = person.preference
-#     for pref in preferences:
-#         if pref is not None:
-#             next_choice = pref
-#             choose(next_choice, person)
-#             break
-    
-#     return 0
-
-
-
-proposers = [a,b,c]
-acceptors = [A,B,C]
-
-choices = 3 #num of preferences for everyone
-
-for choice in range(choices):
-    for i in range(len(proposers)):
-        if(proposers[i].partner is None):
-            proposers[i].make_proposal()
-    
-
-    # check if all engaged
-for proposer in proposers:
-    print (f'({proposer}, {proposer.partner})')
-
+gale_shapely(proposers)
