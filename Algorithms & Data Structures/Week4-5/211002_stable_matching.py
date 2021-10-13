@@ -1,3 +1,15 @@
+"""
+Assignment: Gale-Shapely Algorithm Implementation
+"""
+
+__author__ = "Irene Ann Iype"
+__email__ = "irene.iype@fs-students.de"
+
+import random as rd
+import pandas as pd 
+from time import perf_counter_ns
+import matplotlib.pyplot as plt
+
 def return_index(list_, person):
     for i in range(len(list_)):
         if list_[i] == person:
@@ -10,11 +22,9 @@ class Person:
         self.partner = None
 
     def __str__(self): 
-        # for petinting nodes easily
-        # s = self.name self.partner}'
         return str(self.name)
 
-    def set_preference(self, list_of_persons):  # make into dict later
+    def set_preference(self, list_of_persons):  
         self.preference = list_of_persons
 
     def show_preferences(self):
@@ -51,12 +61,14 @@ class Person:
     
             
             if potential_guy_index > current_guy_index:
-                print(f'sorry, {self} has been rejected by {girl}')
+                # print(f'sorry, {self} has been rejected by {girl}')
+
             #     remove girl from guys list
                 girl_index = return_index(self.preference, girl)
                 self.preference[girl_index] = None
             else:
-                print(f'congratulations! {self} has been accepted by {girl}')
+                # print(f'congratulations! {self} has been accepted by {girl}')
+
                 # remove girl from prev guys list 
                 girl_index = return_index(current_guy.preference, girl)
                 current_guy.preference[girl_index] = None
@@ -69,42 +81,6 @@ class Person:
 
         return 0
 
-
-# proposers a,b,c
-# acceptors A,B,C
-
-# proposers initialisation
-Adam = Person('Adam')
-Bill = Person('Bill')
-Carl = Person('Carl')
-Dan = Person('Dan')
-Eric = Person('Eric')
-
-# acceptors initialisatiom
-Amy = Person('Amy')
-Beth = Person('Beth')
-Cara = Person('Cara')
-Diane = Person('Diane')
-Ellen = Person('Ellen')
-
-# set preferences for acceptors
-Amy.set_preference([Eric, Adam, Bill, Dan, Carl])
-Beth.set_preference([Carl, Bill, Dan, Adam, Eric])
-Cara.set_preference([Bill, Carl, Dan, Eric, Adam])
-Diane.set_preference([Adam, Eric, Dan, Carl, Bill])
-Ellen.set_preference([Dan, Bill, Eric, Carl, Adam])
-
-# set preferences for proposers
-Adam.set_preference([Beth, Amy, Diane, Ellen, Cara])
-Bill.set_preference([Diane, Beth, Amy, Cara, Ellen])
-Carl.set_preference([Beth, Ellen, Cara, Diane, Amy])
-Dan.set_preference([Amy, Diane, Cara, Beth, Ellen])
-Eric.set_preference([Beth, Diane, Amy, Ellen, Cara])
-
-proposers = [Adam, Bill, Carl, Dan, Eric]
-acceptors = [Amy, Beth, Cara, Diane, Ellen]
-
-choices = len(proposers) #num of preferences for everyone = len(proposers)
 
 def gale_shapely(proposers):
 
@@ -119,8 +95,98 @@ def gale_shapely(proposers):
         if exit == 0:
             break
 
-    # print matches
+    
+def print_matches(proposers):
+    # print matches after matching
     for proposer in proposers:
         print (f'({proposer}, {proposer.partner})')
 
-gale_shapely(proposers)
+def create_people(n):
+    """
+    function generates n number of proposers and acceptors of class Person randomly creates and sets preferences of each person
+
+    n : number of proposers and acceptors to create
+    return: 2 lists of randomly generated proposers and acceptors
+    """
+    proposers = []
+    acceptors = []
+
+    # creating proposers and acceptors according to num
+    for i in range(n):
+        accep = Person(f'Girl{i}')
+        prop = Person(f'Guy{i}')
+
+        proposers.append(prop)
+        acceptors.append(accep)
+
+    
+    # creating preferences for each proposer -> by shuffling acceptors list
+    for proposer in proposers:
+        f_list = acceptors
+        rd.shuffle(f_list)
+
+        # set preferences 
+        proposer.set_preference(f_list)
+
+    # creating preferences for each acceptor -> by shuffling proposers list
+    for acceptor in acceptors:
+        m_list = proposers
+        rd.shuffle(m_list)
+
+        # set preferences 
+        acceptor.set_preference(m_list)
+
+    return (proposers, acceptors)
+
+def plot_creator(df: pd.DataFrame):
+    """
+    Creates plot out of the DataFrame with array length on x-axis and duration in seconds on y axis
+    :param df: DataFrame containing array length and duration of respective insertion sort
+    :return: none
+    """
+    # Define the plot
+    plt.style.use("bmh")
+    fig, ax = plt.subplots()
+    ax.plot(df["number"], df["time_taken"], label="gale shapely", marker="o", linestyle="-")
+
+    # Prepare the labels and title
+    ax.legend(loc="upper left")
+    ax.set_xlabel("Number of pairs to match")
+    ax.set_ylabel("Duration in nanoseconds")
+    ax.set_title("Time complexity of gale-shapely algorithm")
+
+    # Create plot and save it
+    plt.show()
+    # fig.savefig("assignment1_insertion_sort_time_complexity/figure_assigment_1")
+
+
+def main():
+
+    df = pd.DataFrame(columns=['number', 'time_taken'])
+
+    sizes = [100, 200, 500, 1000, 2000, 5000, 10000, 20000]
+
+    for i in range(len(sizes)):
+        proposers, acceptors = create_people(sizes[i])
+
+        start = perf_counter_ns()
+        gale_shapely(proposers)
+        end = perf_counter_ns()
+
+        time = (end - start) / 1e6
+        df.loc[i] = [sizes[i]] + [time]
+
+    print(df)
+    plot_creator(df)
+
+    print('Time complexity: From the graph plotted, we can see that it follows O(n^2). This is because the gale-shapely algorithm has a loop runing inside another loop - iterating through a loop in this case takes O(n) time so a nested loop (with each block in each loop taking O(1) time) would thus have a time complexity of O(n^2). ')
+    
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
