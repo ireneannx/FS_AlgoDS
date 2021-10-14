@@ -202,7 +202,7 @@ class Node:
             # left left case 
             if(self.left.get_balance_factor() == -2 and self.left.left.get_balance_factor() == -1): #accessing the pivot parent
                 # do right rotate
-                print('left left case')
+                print(' -> left left case')
                 self.right_rotate()
 
         
@@ -210,7 +210,7 @@ class Node:
             # right right case 
             if(self.right.get_balance_factor() == 2 and self.right.right.get_balance_factor() == 1): #accessing the pivot parent
                 # do left rotate
-                print('right right case')
+                print(' -> right right case')
                 self.left_rotate()
 
 
