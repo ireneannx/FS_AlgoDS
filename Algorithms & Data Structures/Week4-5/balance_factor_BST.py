@@ -1,8 +1,4 @@
-# ------------------------------------ CREATING A BALANCED BINARY SEARCH TREE 
-import random as rd
-from time import perf_counter_ns
-import matplotlib.pyplot as plt
-import pandas as pd
+# ------------------------------------ CREATING A SELF BALANCING BINARY SEARCH TREE - AVL TREE (for left-left and right-right cases) 
 
 __author__ = "Irene"
 __email__ = "irene.iype@fs-students.de," \
@@ -197,16 +193,25 @@ class Node:
 
             if self.left is None:
                 self.left = Node(key, data)
-                self.get_balance_factor()
             else:
                 self.left.insert(key, data)
-                self.get_balance_factor()
 
         # to make tree self balancing, we need to calculate balance factor after insertion. if BF<-1 => left rotate, BF >1 = right rotate 
 
-        if self.left and self.left.balance_factor < -1:
+        if self.left and abs(self.left.get_balance_factor()) > 1:
             # left left case 
-            print('left left')
+            if(self.left.get_balance_factor() == -2 and self.left.left.get_balance_factor() == -1): #accessing the pivot parent
+                # do right rotate
+                print('left left case')
+                self.right_rotate()
+
+        
+        if self.right and abs(self.right.get_balance_factor()) > 1:
+            # right right case 
+            if(self.right.get_balance_factor() == 2 and self.right.right.get_balance_factor() == 1): #accessing the pivot parent
+                # do left rotate
+                print('right right case')
+                self.left_rotate()
 
 
     def get(self, key):
@@ -302,38 +307,6 @@ class KeyValue:
         return s
 
 
-nodes = []  # used in node_list
-
-
-# creating a balanced binary search tree
-def node_list(list):
-    """
-    function that returns a list of nodes in the order they should be inserted into the binary search tree in order
-    to create a balanced tree
-    :param list: sorted list of keyvalue pairs that need to be inserted into the binary search tree
-    :return: nodes
-    """
-    sorted_list = list
-    length = len(sorted_list)
-    mid_index = length // 2
-
-    nodes.append(list[mid_index])
-
-    left = sorted_list[:mid_index]
-    right = sorted_list[mid_index + 1:]
-    if len(left) > 1:
-        node_list(left)
-    else:
-        nodes.append(left[0])
-
-    if len(right) > 1:
-        node_list(right)
-    elif len(right) == 1:
-        nodes.append(right[0])
-
-    return nodes
-
-
 def create_balanced_binary_search_tree(list) -> object:
     """
     function to create balanced binary search tree
@@ -343,20 +316,15 @@ def create_balanced_binary_search_tree(list) -> object:
     # sort the list using merge sort
     sorted_list = divide_merge(list)
 
-    # find the order in which the nodes in the list needs to be inserted into the binary search tree in order to make
-    # it balanced
+    if len(sorted_list) == 0:
+        return None
 
-    nodes = node_list(sorted_list)
+    mid = len(sorted_list) // 2
+    mid_root = Node(sorted_list[mid].key, sorted_list[mid].value)
+    mid_root.left = create_balanced_binary_search_tree(sorted_list[:mid])
+    mid_root.right = create_balanced_binary_search_tree(sorted_list[mid+1:])
 
-    # generate balanced binary search tree
-    # i = 0
-    for i in range(len(nodes)):
-        if i == 0:
-            root = Node(nodes[i].key, nodes[i].value)
-        else:
-            root.insert(nodes[i].key, nodes[i].value)
-        # i += 1
-    return root
+    return mid_root
 
 
 # creating a balanced binary search tree end----------
@@ -369,11 +337,14 @@ if __name__ == '__main__':
 
     root.display()
 
-    # X in this case IS the pivot parent root.left, later will will have to find X 
-    # y = root.right
-    # y.left_rotate()
+    print('Example of left left case: ')
+    root.insert(3,3)
+    root.display()
 
-    # root.display()
+    print('Example of right right case: ')
+    root.insert(17,17)
+    root.insert(18,18)
+    root.display()
 
     
 
