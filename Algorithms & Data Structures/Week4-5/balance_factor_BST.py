@@ -95,6 +95,22 @@ class Node:
            height = 1 + max(left_height, right_height)
            return height
 
+    def get_height_in_class(self):
+
+        if self.right is None and self.left is None: 
+            return 1
+        
+        left_height = 0
+        if self.left is not None:
+            left_height = self.left.get_height_in_class()
+
+        right_height = 0
+        if self.right is not None:
+            right_height = self.right.get_height_in_class ()
+
+        return max(left_height, right_height) + 1
+
+
     def get_balance_factor(self):
 
         """
@@ -135,10 +151,33 @@ class Node:
             self.right.fill_balance_factor()
             self.left.fill_balance_factor()
 
-
-    
     # -----------------
 
+    # rotate functions so tree becomes an AVL tree
+
+    def right_rotate(self): #for left left case
+        x = self #parent of pivot
+        y = self.left #pivot point
+        z = y.left #left child of pivot (rotation point)
+
+        y.left = z.right
+        z.right = y 
+        x.left = z
+
+        return 
+
+    def left_rotate(self): #for right right case 
+        x = self
+        y = self.right
+        z = y.right 
+
+        y.right = z.left
+        z.left = y 
+        x.right = z
+
+        return 
+
+    # ------------------- AVL tree functions end
     def insert(self, key, data):
 
         if self.key == key:
@@ -314,18 +353,25 @@ def create_balanced_binary_search_tree(list) -> object:
 
 # creating a balanced binary search tree end----------
 
-
 if __name__ == '__main__':
     
     root = create_balanced_binary_search_tree(
-        [KeyValue(13, 13), KeyValue(15, 15), KeyValue(16, 16), KeyValue(10, 10), KeyValue(11, 11), KeyValue(6, 6),
+        [KeyValue(13, 13), KeyValue(15, 15), KeyValue(16, 16), KeyValue(10, 10), KeyValue(11, 11), KeyValue(8, 8),
          KeyValue(5, 5), KeyValue(4, 4)])
-    
-    root.insert(3,3) #to make it unbalanced 
 
-    # root.fill_balance_factor()
-    
-    # display root with balance factor calledfor each node
+    root.insert(17,17)
+    root.insert(18,18)
+
     root.display()
+
+    # X in this case IS the pivot parent root.left, later will will have to find X 
+    y = root.right
+    y.left_rotate()
+
+    root.display()
+
+    
+
+
 
 
