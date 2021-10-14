@@ -177,7 +177,6 @@ class Node:
 
         return 
 
-    # ------------------- AVL tree functions end
     def insert(self, key, data):
 
         if self.key == key:
@@ -198,8 +197,17 @@ class Node:
 
             if self.left is None:
                 self.left = Node(key, data)
+                self.get_balance_factor()
             else:
                 self.left.insert(key, data)
+                self.get_balance_factor()
+
+        # to make tree self balancing, we need to calculate balance factor after insertion. if BF<-1 => left rotate, BF >1 = right rotate 
+
+        if self.left and self.left.balance_factor < -1:
+            # left left case 
+            print('left left')
+
 
     def get(self, key):
         if self.key == key:
@@ -359,16 +367,13 @@ if __name__ == '__main__':
         [KeyValue(13, 13), KeyValue(15, 15), KeyValue(16, 16), KeyValue(10, 10), KeyValue(11, 11), KeyValue(8, 8),
          KeyValue(5, 5), KeyValue(4, 4)])
 
-    root.insert(17,17)
-    root.insert(18,18)
-
     root.display()
 
     # X in this case IS the pivot parent root.left, later will will have to find X 
-    y = root.right
-    y.left_rotate()
+    # y = root.right
+    # y.left_rotate()
 
-    root.display()
+    # root.display()
 
     
 
