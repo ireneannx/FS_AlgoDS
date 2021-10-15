@@ -1,10 +1,11 @@
-# ------------------------------------ CREATING A SELF BALANCING BINARY SEARCH TREE - AVL TREE (for left-left and right-right cases) 
+# ------------------------------------ CREATING A SELF BALANCING BINARY SEARCH TREE - AVL TREE (for left-left and right-right cases)
 
 __author__ = "Irene"
 __email__ = "irene.iype@fs-students.de," \
  \
-
     # the merge sort functions
+
+
 def divide_merge(array):
     """
     Splits arrays into lists of size 1 recursively. Then sorts from the lowest level up through the sort() function.
@@ -84,28 +85,26 @@ class Node:
         else:
             right_height = self.right.get_height()
 
-        
-        if self.right is None and self.left is None: 
+        if self.right is None and self.left is None:
             return 1
         else:
-           height = 1 + max(left_height, right_height)
-           return height
+            height = 1 + max(left_height, right_height)
+            return height
 
     def get_height_in_class(self):
 
-        if self.right is None and self.left is None: 
+        if self.right is None and self.left is None:
             return 1
-        
+
         left_height = 0
         if self.left is not None:
             left_height = self.left.get_height_in_class()
 
         right_height = 0
         if self.right is not None:
-            right_height = self.right.get_height_in_class ()
+            right_height = self.right.get_height_in_class()
 
         return max(left_height, right_height) + 1
-
 
     def get_balance_factor(self):
 
@@ -133,8 +132,8 @@ class Node:
 
         # no child
         if self.right is None and self.left is None:
-            return 0 
-        # Only left child
+            return 0
+            # Only left child
         elif self.right is None:
             self.left.fill_balance_factor()
 
@@ -142,7 +141,7 @@ class Node:
         elif self.left is None:
             self.right.fill_balance_factor()
 
-        # both children 
+        # both children
         else:
             self.right.fill_balance_factor()
             self.left.fill_balance_factor()
@@ -151,27 +150,27 @@ class Node:
 
     # rotate functions so tree becomes an AVL tree
 
-    def right_rotate(self): #for left left case
-        x = self #parent of pivot
-        y = self.left #pivot point
-        z = y.left #left child of pivot (rotation point)
+    def right_rotate(self):  # for left left case
+        x = self  # parent of pivot
+        y = self.left  # pivot point
+        z = y.left  # left child of pivot (rotation point)
 
         y.left = z.right
-        z.right = y 
+        z.right = y
         x.left = z
 
-        return 
+        return
 
-    def left_rotate(self): #for right right case 
+    def left_rotate(self):  # for right right case
         x = self
         y = self.right
-        z = y.right 
+        z = y.right
 
         y.right = z.left
-        z.left = y 
+        z.left = y
         x.right = z
 
-        return 
+        return
 
     def insert(self, key, data):
 
@@ -196,23 +195,23 @@ class Node:
             else:
                 self.left.insert(key, data)
 
-        # to make tree self balancing, we need to calculate balance factor after insertion. if BF<-1 => left rotate, BF >1 = right rotate 
+        # to make tree self balancing, we need to calculate balance factor after insertion. if BF<-1 => left rotate, BF >1 = right rotate
 
         if self.left and abs(self.left.get_balance_factor()) > 1:
-            # left left case 
-            if(self.left.get_balance_factor() == -2 and self.left.left.get_balance_factor() == -1): #accessing the pivot parent
+            # left left case
+            if (
+                    self.left.get_balance_factor() == -2 and self.left.left.get_balance_factor() == -1):  # accessing the pivot parent
                 # do right rotate
                 print(' -> left left case')
                 self.right_rotate()
 
-        
         if self.right and abs(self.right.get_balance_factor()) > 1:
-            # right right case 
-            if(self.right.get_balance_factor() == 2 and self.right.right.get_balance_factor() == 1): #accessing the pivot parent
+            # right right case
+            if (
+                    self.right.get_balance_factor() == 2 and self.right.right.get_balance_factor() == 1):  # accessing the pivot parent
                 # do left rotate
                 print(' -> right right case')
                 self.left_rotate()
-
 
     def get(self, key):
         if self.key == key:
@@ -322,7 +321,7 @@ def create_balanced_binary_search_tree(list) -> object:
     mid = len(sorted_list) // 2
     mid_root = Node(sorted_list[mid].key, sorted_list[mid].value)
     mid_root.left = create_balanced_binary_search_tree(sorted_list[:mid])
-    mid_root.right = create_balanced_binary_search_tree(sorted_list[mid+1:])
+    mid_root.right = create_balanced_binary_search_tree(sorted_list[mid + 1:])
 
     return mid_root
 
@@ -330,7 +329,6 @@ def create_balanced_binary_search_tree(list) -> object:
 # creating a balanced binary search tree end----------
 
 if __name__ == '__main__':
-    
     root = create_balanced_binary_search_tree(
         [KeyValue(13, 13), KeyValue(15, 15), KeyValue(16, 16), KeyValue(10, 10), KeyValue(11, 11), KeyValue(8, 8),
          KeyValue(5, 5), KeyValue(4, 4)])
@@ -338,16 +336,10 @@ if __name__ == '__main__':
     root.display()
 
     print('Example of left left case: ')
-    root.insert(3,3)
+    root.insert(3, 3)
     root.display()
 
     print('Example of right right case: ')
-    root.insert(17,17)
-    root.insert(18,18)
+    root.insert(17, 17)
+    root.insert(18, 18)
     root.display()
-
-    
-
-
-
-
