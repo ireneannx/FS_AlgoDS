@@ -6,25 +6,28 @@ __author__ = "Irene Ann Iype"
 __email__ = "irene.iype@fs-students.de"
 
 import random as rd
-import pandas as pd 
+import pandas as pd
 from time import perf_counter_ns
 import matplotlib.pyplot as plt
+
 
 def return_index(list_, person):
     for i in range(len(list_)):
         if list_[i] == person:
             return i
     Exception('index out of range!!!!!!')
+
+
 class Person:
     def __init__(self, name):
         self.name = name
         self.preference = None
         self.partner = None
 
-    def __str__(self): 
+    def __str__(self):
         return str(self.name)
 
-    def set_preference(self, list_of_persons):  
+    def set_preference(self, list_of_persons):
         self.preference = list_of_persons
 
     def show_preferences(self):
@@ -33,8 +36,8 @@ class Person:
         """
         for pref in self.preference:
             print(pref)
-        
-        return 0 
+
+        return 0
 
     def make_proposal(self):
         preferences = self.preference
@@ -42,9 +45,9 @@ class Person:
             if pref is not None:
                 next_choice = pref
 
-                self.choose(next_choice) 
+                self.choose(next_choice)
                 break
-    
+
         return 0
 
     def choose(self, girl):
@@ -58,12 +61,11 @@ class Person:
             preferences = girl.preference
             current_guy_index = return_index(preferences, current_guy)
             potential_guy_index = return_index(preferences, self)
-    
-            
+
             if potential_guy_index > current_guy_index:
                 # print(f'sorry, {self} has been rejected by {girl}')
 
-            #     remove girl from guys list
+                #     remove girl from guys list
                 girl_index = return_index(self.preference, girl)
                 self.preference[girl_index] = None
             else:
@@ -72,34 +74,33 @@ class Person:
                 # remove girl from prev guys list 
                 girl_index = return_index(current_guy.preference, girl)
                 current_guy.preference[girl_index] = None
-                current_guy.partner = None 
+                current_guy.partner = None
 
                 # set girl up with new guy 
                 self.partner = girl
                 girl.partner = self
 
-
         return 0
 
 
 def gale_shapely(proposers):
-
-    while True: #for each choice 
-        exit = 0 
-        for i in range(len(proposers)): #go through each proposer
-            if(proposers[i].partner is None):
+    while True:  # for each choice
+        exit = 0
+        for i in range(len(proposers)):  # go through each proposer
+            if (proposers[i].partner is None):
                 proposers[i].make_proposal()
-                exit += 1 
-        
-        #exit early if all engaged 
+                exit += 1
+
+                # exit early if all engaged
         if exit == 0:
             break
 
-    
+
 def print_matches(proposers):
     # print matches after matching
     for proposer in proposers:
-        print (f'({proposer}, {proposer.partner})')
+        print(f'({proposer}, {proposer.partner})')
+
 
 def create_people(n):
     """
@@ -119,7 +120,6 @@ def create_people(n):
         proposers.append(prop)
         acceptors.append(accep)
 
-    
     # creating preferences for each proposer -> by shuffling acceptors list
     for proposer in proposers:
         f_list = acceptors
@@ -137,6 +137,7 @@ def create_people(n):
         acceptor.set_preference(m_list)
 
     return (proposers, acceptors)
+
 
 def plot_creator(df: pd.DataFrame):
     """
@@ -161,7 +162,6 @@ def plot_creator(df: pd.DataFrame):
 
 
 def main():
-
     df = pd.DataFrame(columns=['number', 'time_taken'])
 
     sizes = [100, 200, 500, 1000, 2000, 5000, 10000, 20000]
@@ -179,14 +179,10 @@ def main():
     print(df)
     plot_creator(df)
 
-    print('Time complexity: From the graph plotted, we can see that it follows O(n^2). This is because the gale-shapely algorithm has a loop runing inside another loop - iterating through a loop in this case takes O(n) time so a nested loop (with each block in each loop taking O(1) time) would thus have a time complexity of O(n^2). ')
-    
+    print(
+        'Time complexity: From the graph plotted, we can see that it follows O(n^2). This is because the gale-shapely '
+        'algorithm has a loop runing inside another loop - iterating through a loop in this case takes O(n) time so a nested loop (with each block in each loop taking O(1) time) would thus have a time complexity of O(n^2). ')
+
+
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-

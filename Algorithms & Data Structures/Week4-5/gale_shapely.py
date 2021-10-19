@@ -1,12 +1,20 @@
 # gale shapely as implemented in class
 # you can tell a function in python what type you are expecting
+# inheritance in python
 
-class Proposer:
+class Person:
     def __init__(self, name):
         self.name = name
-        # self.preferences = None
-        # self.match = None
-        # self.proposal_index = 0
+
+    def __str__(self):
+        return self.name
+
+
+class Proposer(Person):  # proposer now inherits from Person
+
+    def __init__(self, name):
+        super().__init__(
+            name)  # for init func u are using the parent class's init func which can be accessed using super
 
     def set_preferences(self, preferences):
         self.preferences = preferences
@@ -31,13 +39,10 @@ class Proposer:
         return self.match is not None
 
 
-class Receiver:
+class Receiver(Person):
 
     def __init__(self, name):
-        self.name = name
-
-    def __str__(self):
-        return self.name
+        super().__init__(name)
 
     def set_preferences(self, preferences):
         self.preferences = {}
