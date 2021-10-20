@@ -1,5 +1,6 @@
 # Q1 Determine if a given string is a palindrome
-# A palindrome is sequence that reads same backwards as forwards. “Anna”, for example is a palindrome. The task is to determine if a given string is a palindrome.
+# A palindrome is sequence that reads same backwards as forwards. “Anna”, for example is a palindrome.
+# The task is to determine if a given string is a palindrome.
 
 
 def isPalindrome(x):
@@ -23,7 +24,8 @@ def isPalindrome(x):
 # -----------------------------------------------------------------------
 
 # Q3 Print out all Fibonacci numbers smaller or equal to a given number
-# Given a positive number, print out all Fibonacci numbers smaller or equal to that number. For example, given the number 11 the program should print out: 1 1 2 3 5 8
+# Given a positive number, print out all Fibonacci numbers smaller or equal to that number. For example,
+# given the number 11 the program should print out: 1 1 2 3 5 8
 # The next Fibonacci number would be 13 which is already larger than 11.
 
 def print_fibonacci(num):
@@ -38,6 +40,8 @@ def print_fibonacci(num):
 
         if (c > num):
             return 0
+
+
 # time complexity = O(n)
 # print_fibonacci(24)
 
@@ -53,8 +57,10 @@ def fibonacci(num):
         return fibonacci(num - 2) + fibonacci(num - 1)
 
 
+fibonacci(15)
 # better func
 memory = {}
+
 
 def fibonacci2(num):
     if num == 0:
@@ -68,14 +74,27 @@ def fibonacci2(num):
         memory[num] = f
         return f
 
+
 # problem = in this func we are using a variable (memory) that is ourside the func
 # to solve, use OOP
+
+# STATIC METHOD
+
+'''Static methods, much like class methods, are methods that are bound to a class rather than its object.
+
+They do not require a class instance creation. So, they are not dependent on the state of the object.
+
+The difference between a static method and a class method is:
+
+Static method knows nothing about the class and just deals with the parameters.
+Class method works with the class since its parameter is always the class itself.'''
+
 
 class Fibonacci:
     m = {}
 
     @staticmethod
-    def get(n):
+    def get(n): #there is no self since its a static method. it just deals with parameters.
         if n == 0:
             return 0
         elif n <= 2:
@@ -83,23 +102,21 @@ class Fibonacci:
         elif n in Fibonacci.m.keys():
             return Fibonacci.m[n]
         else:
-            f = Fibonacci.get(n-1) + Fibonacci.get(n-2)
+            f = Fibonacci.get(n - 1) + Fibonacci.get(n - 2)
             Fibonacci.m[n] = f
             return f
 
-print(Fibonacci.get(100))
+
+# print(Fibonacci.get(100))
 
 def find_largest_fibonacci(x):
     n = 0
     while True:
         f = fibonacci(n)
-        if f>x:
+        if f > x:
             break
         n += 1
-    return fibonacci2(n-1)
-
-
-
+    return fibonacci2(n - 1)
 
 
 # -----------------------------------------------------------------------
