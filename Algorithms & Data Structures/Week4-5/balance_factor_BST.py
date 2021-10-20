@@ -1,9 +1,11 @@
-# ------------------------------------ CREATING A SELF BALANCING BINARY SEARCH TREE - AVL TREE (for left-left and right-right cases)
+# ------------------------------------ CREATING A SELF BALANCING BINARY SEARCH TREE - AVL TREE
+# (for left-left and right-right cases)
 
-__author__ = "Irene"
-__email__ = "irene.iype@fs-students.de," \
- \
-    # the merge sort functions
+"""__author__ = "Irene"
+__email__ = "irene.iype@fs-students.de,"""
+
+
+# the merge sort functions
 
 
 def divide_merge(array):

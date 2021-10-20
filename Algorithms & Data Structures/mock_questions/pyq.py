@@ -83,7 +83,8 @@ def find_common_elem(mat):
 
 
 mat = [[1, 2, 3, 4, 5], [2, 4, 5, 8, 10], [3, 5, 7, 9, 11], [1, 3, 5, 7, 9]]
-find_common_elem(mat)
+mat2 = [[3, 4, 6, 7, 14, 15, 16], [1, 3, 4, 5, 10, 14, 20], [2, 3, 5, 7, 11, 14, 19], [1, 3, 7, 9, 12, 13, 14]]
+find_common_elem(mat2)
 
 """Exam Outline:
 Detailed description of approach with explanation:
